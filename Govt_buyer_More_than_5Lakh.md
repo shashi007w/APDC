@@ -1,16 +1,27 @@
 ```mermaid
 graph TD
-    A[Govt User selects Vendor & Places Order] --> B{Confirmation Pending from Vendor};
-    B -- Govt User --> C[Govt User Status: Order Placed, Pending Vendor Confirmation];
-    B -- HoD --> D[HoD Status: Awaiting Vendor Confirmation];
-    B -- Vendor --> E[Vendor Status: New Order, Awaiting Action];
+    A[Govt User floats a Tender and invites bid from Vendors] --> B{Pending Vendor bid};
+    B -- Govt User --> C[Govt User Status: Tender floated, Pending Vendor bid];
+    B -- HoD --> D[HoD Status: Awaiting Vendor bid];
+    B -- Vendor --> E[Vendor Status: New Tender, Awaiting Action];
 
-    E --> F{Vendor Confirms Availability};
+    E --> F{Vendor submits Bid};
     F -- Accepted --> K;
-    F -- Rejected --> H[Vendor Status: Rejected Order];
+    F -- Negotiate --> NG_AVAIL1{Negotiation Round 1 Availability};
 
-    H --> I[Govt User Status: Vendor Rejected Order];
+    NG_AVAIL1 -- HoD & Vendor Negotiated successfully --> F;
+    NG_AVAIL1 -- Failed Negotiation 1 --> NG_AVAIL2{Negotiation Round 2 Availability};
+
+    NG_AVAIL2 -- HoD & Vendor Negotiated successfully --> F;
+    NG_AVAIL2 -- Failed Negotiation 2 --> NG_AVAIL3{Negotiation Round 3 Availability};
+
+    NG_AVAIL3 -- HoD & Vendor Negotiated successfully --> F;
+    NG_AVAIL3 -- Failed Negotiation 3 --> H[Vendor Status: Rejected Order];
+
+
+    H --> I[Govt User Status: Vendor Rejected Order]; 
     H --> J[HoD Status: Vendor Rejected Order];
+    J[HoD Status: Vendor Rejected Order] --> B{Pending Vendor bid}
 
     K{Confirmation Pending from HoD};
     K -- Govt User --> L[Govt User Status: Vendor Approved, Waiting for HoD Approval];
@@ -36,4 +47,3 @@ graph TD
     X -- Vendor Rejects --> AB[Vendor Status: Work Order Rejected by Vendor];
     AB --> AC[Govt User Status: Work Order Rejected by Vendor];
     AB --> AD[HoD Status: Work Order Rejected by Vendor];
- 
